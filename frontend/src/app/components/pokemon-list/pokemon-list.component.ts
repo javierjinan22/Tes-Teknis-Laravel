@@ -32,7 +32,6 @@ export class PokemonListComponent implements OnInit {
     this.loading = true;
     this.pokemonService.getPokemons().subscribe({
       next: (data) => {
-        // Sort by weight descending (heaviest first)
         this.pokemons = data.sort((a, b) => b.weight - a.weight);
         this.applyFilter();
         this.loading = false;

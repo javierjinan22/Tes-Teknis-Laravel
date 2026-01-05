@@ -11,31 +11,23 @@ use Illuminate\Support\Facades\Storage;
 class FetchPokemonData extends Command
 {
     protected $signature = 'pokemon:fetch';
-    protected $description = 'Fetch Pokemon data from PokeAPI (ID 1-400, weight >= 100)';
+    protected $description = 'Fetch Pokemon data from PokeAPI';
 
     public function handle()
     {
-        $this->info('Starting Pokemon data fetch...');
-        
         $savedCount = 0;
-        $skippedCount = 0;
         
         for ($id = 1; $id <= 400; $id++) {
             try {
-                $this->info("Fetching Pokemon ID: {$id}");
-                
                 $response = Http::get("https://pokeapi.co/api/v2/pokemon/{$id}");
                 
                 if ($response->failed()) {
-                    $this->error("Failed to fetch Pokemon ID: {$id}");
                     continue;
                 }
                 
                 $pokemonData = $response->json();
                 
                 if ($pokemonData['weight'] < 100) {
-                    $this->warn("Skipped Pokemon {$pokemonData['name']} (weight: {$pokemonData['weight']})");
-                    $skippedCount++;
                     continue;
                 }
                 
@@ -45,7 +37,7 @@ class FetchPokemonData extends Command
                     ['pokemon_id' => $id],
                     [
                         'name' => $pokemonData['name'],
-                        'base_experience' => $pokemonData['base_experience'] ?? 0, // ← TAMBAHKAN INI
+                        'base_experience' => $pokemonData['base_experience'] ?? 0,
                         'weight' => $pokemonData['weight'],
                         'image_path' => $imagePath
                     ]
@@ -53,20 +45,16 @@ class FetchPokemonData extends Command
                 
                 $this->processAbilities($pokemon, $pokemonData['abilities']);
                 
-                $this->info("Saved Pokemon: {$pokemonData['name']} (weight: {$pokemonData['weight']}, exp: {$pokemon->base_experience})");
                 $savedCount++;
                 
                 usleep(100000); 
                 
             } catch (\Exception $e) {
-                $this->error("Error processing Pokemon ID {$id}: " . $e->getMessage());
                 continue;
             }
         }
         
-        $this->info("\n=== Fetch Complete ===");
-        $this->info("Total saved: {$savedCount}");
-        $this->info("Total skipped: {$skippedCount}");
+        $this->info("Selesai! Total Pokemon tersimpan: {$savedCount}");
         
         return Command::SUCCESS;
     }
@@ -92,7 +80,6 @@ class FetchPokemonData extends Command
             return $filepath;
             
         } catch (\Exception $e) {
-            $this->error("Failed to download image for Pokemon ID {$pokemonId}: " . $e->getMessage());
             return null;
         }
     }
