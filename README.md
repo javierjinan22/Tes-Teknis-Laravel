@@ -2,7 +2,7 @@ Pastikan sudah terinstall:
 - PHP 8.2 atau lebih baru
 - Composer
 - Node.js
-- MySQL atau bisa pakai SQLite (lebih mudah)
+- MySQL atau SQLite
 
 ## Cara Install
 
