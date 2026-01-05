@@ -1,0 +1,64 @@
+<div class="pokemon-container">
+  <div class="header">
+    <h1>Pokémon Collection</h1>
+  </div>
+
+  <div class="filter-section">
+    <label for="weight-filter">Filter by Weight:</label>
+    <select 
+      id="weight-filter" 
+      [(ngModel)]="selectedWeightFilter" 
+      (change)="onFilterChange()"
+      class="filter-select"
+    >
+      <option *ngFor="let filter of weightFilters" [value]="filter.value">
+        {{ filter.label }}
+      </option>
+    </select>
+    <span class="result-count">{{ filteredPokemons.length }} Pokémon found</span>
+  </div>
+
+
+  <div *ngIf="!loading && !error" class="pokemon-grid">
+    <div *ngFor="let pokemon of filteredPokemons" class="pokemon-card">
+      <div class="pokemon-image-container">
+        <img 
+          [src]="getImageUrl(pokemon.image_path)" 
+          [alt]="pokemon.name"
+          class="pokemon-image"
+          (error)="onImageError($event)"
+        >
+      </div>
+      
+      <div class="pokemon-info">
+        <h3 class="pokemon-name">{{ capitalizeFirstLetter(pokemon.name) }}</h3>
+        <p class="pokemon-id">#{{ pokemon.pokemon_id }}</p>
+        
+        <div class="pokemon-stats">
+          <div class="stat-item">
+            <span class="stat-label">Base Experience:</span>
+            <span class="stat-value">{{ pokemon.base_experience }}</span>
+          </div>
+          
+          <div class="stat-item weight-stat">
+            <span class="stat-label">Weight:</span>
+            <span class="stat-value">{{ pokemon.weight }}</span>
+          </div>
+        </div>
+        
+        <div class="abilities-section">
+          <h4>Abilities:</h4>
+          <div class="abilities-list">
+            <span 
+              *ngFor="let ability of pokemon.abilities" 
+              class="ability-badge"
+            >
+              {{ capitalizeFirstLetter(ability.name) }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,15 @@
+{
+  "name": "monorepo-laravel-angular",
+  "version": "1.0.0",
+  "description": "Monorepo with Laravel 11 Backend and Angular 13 Frontend",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm run backend\" \"npm run frontend\"",
+    "backend": "cd backend && php artisan serve",
+    "frontend": "cd frontend && npm start",
+    "install:all": "cd backend && composer install && cd ../frontend && npm install"
+  },
+  "devDependencies": {
+    "concurrently": "^7.6.0"
+  }
+}
